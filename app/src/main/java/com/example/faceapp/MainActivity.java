@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -24,6 +25,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.mlkit.vision.barcode.BarcodeScanner;
+import com.google.mlkit.vision.barcode.BarcodeScanning;
+import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.face.Face;
 import com.google.mlkit.vision.face.FaceDetection;
@@ -40,6 +44,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnSuccessListener<Text>, OnFailureListener {
+
+
 
     public static int REQUEST_CAMERA = 111;
     public static int REQUEST_GALLERY = 222;
@@ -60,24 +66,10 @@ public class MainActivity extends AppCompatActivity implements OnSuccessListener
 
         txtresults = findViewById(R.id.txtresults);
         mImageView = findViewById(R.id.image_view);
-        mImageView= findViewById(R.id.image_view);
+
         if(checkSelfPermission(Manifest.permission.CAMERA) !=
                 PackageManager.PERMISSION_GRANTED)
             requestPermissions(new String[]{Manifest.permission.CAMERA},100);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     }
@@ -100,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements OnSuccessListener
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && null != data) {
             try {
@@ -113,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements OnSuccessListener
                 throw new RuntimeException(e);
             }
         }
+
     }
 
     @Override
@@ -139,6 +132,13 @@ public class MainActivity extends AppCompatActivity implements OnSuccessListener
             }
             resultados=resultados + "\n";
         }
+
+        //para que el textgo se ajuste
+        txtresults.setMaxLines(15);
+        txtresults.setEllipsize(null);
+        txtresults.setMovementMethod(
+                new android.text.method.ScrollingMovementMethod()
+        );
         txtresults.setText(resultados);
 
 
@@ -149,7 +149,8 @@ public class MainActivity extends AppCompatActivity implements OnSuccessListener
 
 
 
-    public void Rostrosfx(View v) {
+    public void Rostrosfx(View v)
+    {
         InputImage image = InputImage.fromBitmap(mSelectedImage, 0);
         FaceDetectorOptions options =
                 new FaceDetectorOptions.Builder()
@@ -185,5 +186,50 @@ public class MainActivity extends AppCompatActivity implements OnSuccessListener
 
 
 
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void Barcodefx(View view) {
+        if (mSelectedImage == null) {
+            txtresults.setText("Seleccione una imagen primero");
+            return;
+        }
+
+        InputImage image = InputImage.fromBitmap(mSelectedImage, 0);
+        scanBarcode(image);
+    }
+
+
+    private void scanBarcode(InputImage image) {
+        BarcodeScanner scanner = BarcodeScanning.getClient();
+        scanner.process(image)
+                .addOnSuccessListener(barcodes -> {
+                    StringBuilder result = new StringBuilder();
+                    for (Barcode barcode : barcodes) {
+                        result.append("Tipo: ").append(barcode.getFormat()).append("\n");
+                        result.append("Valor: ").append(barcode.getRawValue()).append("\n\n");
+                    }
+                    txtresults.setText(result.toString());
+                })
+                .addOnFailureListener(e -> txtresults.setText("Error al escanear: " + e.getMessage()));
     }
 }
