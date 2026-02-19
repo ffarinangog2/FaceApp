@@ -31,10 +31,20 @@ android {
 }
 
 dependencies {
-   // implementation libs.barcode.scanning
+
+
+
+    implementation libs.image.labeling
+
+
+
+    // implementation libs.barcode.scanning
     implementation libs.play.services.mlkit.barcode.scanning
     implementation libs.glide
     annotationProcessor libs.compiler
+
+
+
 
     implementation libs.face.detection
     implementation libs.play.services.mlkit.text.recognition

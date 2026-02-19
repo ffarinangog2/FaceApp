@@ -21,25 +21,29 @@
 
     <Button
         android:id="@+id/btGallery"
-        android:layout_margin="5dp"
         android:layout_width="0dp"
         android:layout_height="55dp"
+        android:layout_margin="5dp"
         android:onClick="abrirGaleria"
         android:text="Galería"
-        app:layout_constraintTop_toBottomOf="@+id/txtTitulo"
-         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/btCamera" />
+        app:icon="@drawable/galeria"
+        app:iconGravity="textStart"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/btCamera"
+        app:layout_constraintTop_toBottomOf="@+id/txtTitulo" />
 
     <Button
         android:id="@+id/btCamera"
-        android:layout_margin="5dp"
         android:layout_width="0dp"
         android:layout_height="55dp"
+        android:layout_margin="5dp"
         android:onClick="abrirCamara"
         android:text="Cámara"
-        app:layout_constraintTop_toBottomOf="@+id/txtTitulo"
+        app:icon="@drawable/camera"
+        app:iconGravity="textStart"
         app:layout_constraintLeft_toRightOf="@+id/btGallery"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtTitulo" />
 
 
 
@@ -61,42 +65,59 @@
         android:inputType="textMultiLine"
         android:scrollbars="vertical"
         android:text="Resultados"
-        app:layout_constraintBottom_toTopOf="@id/btText" />
+        app:layout_constraintBottom_toTopOf="@id/layoutBottomButtons"
+        tools:layout_editor_absoluteX="10dp" />
 
 
-    <Button
-        android:id="@+id/btText"
+    <LinearLayout
+        android:id="@+id/layoutBottomButtons"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:onClick="OCRfx"
-        android:text="OCR"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btFace" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <Button
-        android:id="@+id/btFace"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_margin="10dp"
-        android:onClick="Rostrosfx"
-        android:text="Rostros"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btText"
-        app:layout_constraintEnd_toStartOf="@id/btnBarcode" />
+        <Button
+            android:id="@+id/btText"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:onClick="OCRfx"
+            app:icon="@drawable/ocr"
+            app:iconGravity="textEnd" />
 
-    <Button
-        android:id="@+id/btnBarcode"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_margin="10dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:onClick="Barcodefx"
-        android:text="QR / Barras"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <Button
+            android:id="@+id/btFace"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:onClick="Rostrosfx"
+            app:icon="@drawable/persona"
+            app:iconGravity="textEnd" />
+
+        <Button
+            android:id="@+id/btncosas"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:onClick="Labeling"
+            app:icon="@drawable/texto"
+            app:iconGravity="textEnd" />
+
+        <Button
+            android:id="@+id/btnBarcode"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:onClick="Barcodefx"
+            app:icon="@drawable/qr"
+            app:iconGravity="textEnd" />
+
+
+    </LinearLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

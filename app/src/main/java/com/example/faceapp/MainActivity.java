@@ -33,6 +33,10 @@ import com.google.mlkit.vision.face.Face;
 import com.google.mlkit.vision.face.FaceDetection;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
+import com.google.mlkit.vision.label.ImageLabel;
+import com.google.mlkit.vision.label.ImageLabeler;
+import com.google.mlkit.vision.label.ImageLabeling;
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
@@ -84,6 +88,11 @@ public class MainActivity extends AppCompatActivity implements OnSuccessListener
         startActivityForResult(intent, REQUEST_CAMERA);
     }
     public void OCRfx(View v) {
+
+        if (mSelectedImage == null) {
+            txtresults.setText("Seleccione una imagen primero");
+            return;
+        }
         InputImage image = InputImage.fromBitmap(mSelectedImage, 0);
         TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
         recognizer.process(image)
@@ -148,9 +157,12 @@ public class MainActivity extends AppCompatActivity implements OnSuccessListener
 
 
 
-
     public void Rostrosfx(View v)
     {
+        if (mSelectedImage == null) {
+            txtresults.setText("Seleccione una imagen primero");
+            return;
+        }
         InputImage image = InputImage.fromBitmap(mSelectedImage, 0);
         FaceDetectorOptions options =
                 new FaceDetectorOptions.Builder()
@@ -191,6 +203,26 @@ public class MainActivity extends AppCompatActivity implements OnSuccessListener
 
 
 
+    public void Labeling(View v) {
+
+        if (mSelectedImage == null) {
+            txtresults.setText("Seleccione una imagen primero");
+            return;
+        }
+        InputImage image = InputImage.fromBitmap(mSelectedImage, 0);
+        ImageLabeler labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS);
+        labeler.process(image)
+                .addOnSuccessListener(new OnSuccessListener<List<ImageLabel>>() {
+                    @Override
+                    public void onSuccess(List<ImageLabel> labels) {
+                        String resultados = "";
+                        for (ImageLabel label : labels)
+                            resultados = resultados + label.getText() + " " + label.getConfidence() + "%\n";
+                        txtresults.setText(resultados);
+                    }
+                })
+                .addOnFailureListener(this);
+    }
 
 
 
@@ -213,7 +245,6 @@ public class MainActivity extends AppCompatActivity implements OnSuccessListener
             txtresults.setText("Seleccione una imagen primero");
             return;
         }
-
         InputImage image = InputImage.fromBitmap(mSelectedImage, 0);
         scanBarcode(image);
     }
